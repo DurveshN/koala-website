@@ -1,492 +1,517 @@
 "use client";
 
+import type { ReactNode } from "react";
+import Image, { type StaticImageData } from "next/image";
 import { Button } from "@/components/ui/button";
-import Aurora from "@/components/reactbits/aurora";
-import AnimatedContent from "@/components/reactbits/animated-content";
-import GlareHover from "@/components/reactbits/glare-hover";
-import Magnet from "@/components/reactbits/magnet";
 import {
   ShieldCheck,
   Cpu,
   FileText,
-  Code2,
+  Terminal,
   Eye,
   Database,
   WifiOff,
-  ScanLine,
-  Lock,
-  Server,
   ArrowRight,
   Download,
   CheckCircle2,
-  Monitor,
-  Terminal,
-  Globe,
+  ChevronDown,
+  Network,
 } from "lucide-react";
+
+import fullWorking from "../../public/prototype_image/full_working.png";
+import toolCalling from "../../public/prototype_image/tool_calling.png";
+import auditLog from "../../public/prototype_image/audit_log.png";
+import addModel1 from "../../public/prototype_image/add_model_1.png";
+import addModel2 from "../../public/prototype_image/add_model_2.png";
+import addModel3 from "../../public/prototype_image/add_model_3.png";
+import manageModel from "../../public/prototype_image/manage_model.png";
+
+const RELEASE_URL =
+  "https://github.com/DurveshN/koala/releases/tag/v1.18.31-koala.1";
 
 const navLinks = [
   { label: "Features", href: "#features" },
-  { label: "How it works", href: "#how-it-works" },
+  { label: "Agent", href: "#agent" },
   { label: "Models", href: "#models" },
-  { label: "Download", href: "#download" },
+  { label: "Security", href: "#security" },
+  { label: "FAQ", href: "#faq" },
 ];
 
-const featureCards = [
+const featureGrid = [
   {
     icon: WifiOff,
-    title: "Air-gapped desktop app",
+    title: "Air-gapped by design",
     description:
-      "Koala runs entirely on your organization's GPU server. No external calls, ever. Verified by an always-visible network monitor.",
+      "Runs on your own GPU server. No cloud calls, no external APIs — verified live by the built-in network monitor.",
   },
   {
     icon: Cpu,
-    title: "Model auto-selection",
+    title: "Multi-model routing",
     description:
-      "Route coding, reasoning, summarization and vision tasks to the open-weight model best suited for each job, all running locally.",
+      "Connects to several open-weight models at once and routes each request to the one suited for it: coding, documents, vision, or general reasoning.",
   },
   {
-    icon: Eye,
-    title: "Multimodal understanding",
+    icon: Network,
+    title: "Bring your own model",
     description:
-      "Read scanned PDFs, handwritten notes, engineering drawings and photographs through on-device OCR and vision models.",
+      "Any OpenAI-compatible endpoint — Ollama, vLLM, LM Studio — can be connected in minutes. No redesign required to add a new one.",
   },
   {
     icon: Terminal,
     title: "Agentic execution",
     description:
-      "Plan multi-step work, call local tools, read and write files, execute code in a sandbox, and iterate until the deliverable is done.",
+      "Plans multi-step work and calls local tools: file read/write, sandboxed code execution, spreadsheet edits, document search.",
+  },
+  {
+    icon: Eye,
+    title: "Multimodal understanding",
+    description:
+      "On-device OCR and vision models read scanned PDFs, handwritten notes, P&ID drawings and photographs.",
   },
   {
     icon: FileText,
     title: "Real deliverables",
     description:
-      "Generate approval notes, board-ready PPTs, Excel calculations with formulas, and working code — not just chat replies.",
+      "Produces approval notes, PPT/Word/Excel files and working code — not just chat replies.",
   },
   {
     icon: Database,
     title: "Local knowledge base",
     description:
-      "Ground every answer in your organization's manuals, SOPs and past correspondence through a local connector.",
+      "Grounds answers in your organization's own manuals, SOPs and past correspondence through a local connector.",
+  },
+  {
+    icon: ShieldCheck,
+    title: "Full audit trail",
+    description:
+      "Every tool call and provider request is logged, with an always-on network monitor showing allowed vs. denied calls.",
   },
 ];
 
-const steps = [
+const modelSteps: { image: StaticImageData; alt: string; title: string; description: string }[] = [
   {
-    label: "01",
-    title: "Install on premises",
+    image: addModel1,
+    alt: "Connecting a local or private OpenAI-compatible model via a base URL",
+    title: "1. Point at your endpoint",
     description:
-      "Deploy the Koala desktop application on a single Windows workstation or GPU server inside your network.",
-    visual: <Monitor className="size-10 text-primary" />,
+      "Add a provider ID and base URL for any OpenAI-compatible server — here, a local Ollama instance on 127.0.0.1.",
   },
   {
-    label: "02",
-    title: "Connect your data",
+    image: addModel2,
+    alt: "Declaring model capabilities: context window, tool calling, streaming, structured output",
+    title: "2. Declare its capabilities",
     description:
-      "Index manuals, drawings, spreadsheets and internal documents into the built-in local vector store.",
-    visual: <Database className="size-10 text-primary" />,
+      "Set context window, max output, and what it supports: image input, tool calling, streaming, structured output, reasoning.",
   },
   {
-    label: "03",
-    title: "Describe the task",
+    image: addModel3,
+    alt: "Assigning preferred roles and priority to a connected model",
+    title: "3. Assign roles & priority",
     description:
-      "Ask a question, drop a drawing, paste code, or upload an inspection report. Koala picks the right local model automatically.",
-    visual: <ScanLine className="size-10 text-primary" />,
-  },
-  {
-    label: "04",
-    title: "Get a real output",
-    description:
-      "Receive a reviewed Word note, a verified code patch, or a calculation sheet with steps shown — without anything leaving the room.",
-    visual: <CheckCircle2 className="size-10 text-primary" />,
+      "Tag it as general, coding, document or vision, set a priority, and it's live in the routing pool.",
   },
 ];
 
-const taskCards = [
+const faqItems = [
   {
-    tag: "Document",
-    title: "Read a scanned inspection report",
-    description:
-      "OCR extracts findings from a scanned PDF. Koala drafts an approval note and exports it as a Word file.",
-    chips: ["OCR", "Summarization", ".docx"],
-    image: "scan",
+    q: "Does any data ever leave the network?",
+    a: "No outbound calls are made to external services. The audit log and live network monitor record every request — provider, endpoint, status and duration — so this is verifiable, not just claimed.",
   },
   {
-    tag: "Code",
-    title: "Generate and sandbox-test a script",
-    description:
-      "Koala writes code, runs it in the local sandbox, debugs errors, and returns a verified patch.",
-    chips: ["Code generation", "Sandbox", "Verification"],
-    image: "code",
+    q: "What hardware do I need?",
+    a: "A workstation or server with a mid-range GPU. Larger open-weight models (120B-class) need more VRAM; a smaller open-weight model works fine if that hardware isn't available.",
   },
   {
-    tag: "Multimodal",
-    title: "Understand a P&ID drawing",
-    description:
-      "A vision model reads a Piping & Instrument Diagram, identifies components and cross-references plant SOPs.",
-    chips: ["Vision", "P&ID", "Knowledge base"],
-    image: "drawing",
+    q: "Which models can I use?",
+    a: "Any model served through an OpenAI-compatible API — local Ollama, vLLM, LM Studio, or similar. New models connect without redesigning the workbench.",
+  },
+  {
+    q: "How does model auto-selection work?",
+    a: "Each connected model is tagged with preferred roles (general, coding, document, vision) and a priority. Requests route to the best match for the task automatically.",
+  },
+  {
+    q: "Can it read scanned documents and drawings?",
+    a: "Yes. On-device OCR and vision models handle scanned inspection reports, handwritten notes, P&ID drawings and photographs.",
+  },
+  {
+    q: "What does it actually hand back?",
+    a: "Real files: Word approval notes, PowerPoint decks, Excel calculations with steps shown, and code — generated and, where relevant, run in a local sandbox.",
   },
 ];
 
-const trustLogos = [
-  { name: "Defence PSU", abbr: "PSU" },
-  { name: "National Refinery", abbr: "NRL" },
-  { name: "State Power Grid", abbr: "SPG" },
-  { name: "Steel Authority", abbr: "SAIL" },
-  { name: "Public Sector Bank", abbr: "PSB" },
-];
-
-function KoalaLogo() {
+function Reveal({
+  children,
+  delay = 0,
+  className = "",
+}: {
+  children: ReactNode;
+  delay?: number;
+  className?: string;
+}) {
   return (
-    <div className="flex items-center gap-2">
-      <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary text-primary-foreground">
-        <span className="font-heading text-lg font-bold">K</span>
-      </div>
-      <span className="font-heading text-xl font-semibold tracking-tight">koala</span>
+    <div
+      className={`animate-in fade-in-0 slide-in-from-bottom-4 fill-mode-both duration-700 ease-out ${className}`}
+      style={delay ? { animationDelay: `${delay}s` } : undefined}
+    >
+      {children}
     </div>
   );
 }
 
-function PlaceGraphic({ variant }: { variant: string }) {
-  const gradients: Record<string, string> = {
-    scan: "from-teal-500/30 to-emerald-400/10",
-    code: "from-indigo-500/30 to-violet-400/10",
-    drawing: "from-amber-500/30 to-orange-400/10",
-    hero: "from-teal-500/40 to-indigo-500/20",
-  };
-  const className =
-    "relative flex h-full w-full items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br " +
-    (gradients[variant] || gradients.hero);
+function KoalaLogo() {
   return (
-    <div className={className}>
-      <div className="absolute inset-0 opacity-20" style={{ backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.4) 1px, transparent 1px)", backgroundSize: "24px 24px" }} />
-      <div className="relative z-10 rounded-2xl border border-white/10 bg-white/5 p-6 shadow-2xl backdrop-blur-sm">
-        {variant === "scan" && <FileText className="size-12 text-teal-300" />}
-        {variant === "code" && <Code2 className="size-12 text-indigo-300" />}
-        {variant === "drawing" && <ScanLine className="size-12 text-amber-300" />}
-        {variant === "hero" && <ShieldCheck className="size-14 text-teal-200" />}
+    <div className="flex items-center gap-2">
+      <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+        <span className="font-heading text-base font-bold">K</span>
       </div>
+      <span className="font-heading text-lg font-semibold tracking-tight">koala</span>
+    </div>
+  );
+}
+
+function Frame({
+  src,
+  alt,
+  className = "",
+}: {
+  src: StaticImageData;
+  alt: string;
+  className?: string;
+}) {
+  return (
+    <div
+      className={`overflow-hidden rounded-xl border border-border bg-card shadow-sm ${className}`}
+    >
+      <Image src={src} alt={alt} className="h-auto w-full" placeholder="blur" />
     </div>
   );
 }
 
 export default function Home() {
   return (
-    <div className="relative min-h-screen overflow-x-hidden bg-background text-foreground">
-      <div className="pointer-events-none fixed inset-0 z-0 opacity-60">
-        <Aurora colorStops={["#0B3D3E", "#14B8A6", "#0F172A"]} amplitude={1.2} blend={0.6} />
-      </div>
-
-      <div className="pointer-events-none fixed inset-0 z-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-background/30 via-background/80 to-background" />
-
-      <header className="sticky top-0 z-50 border-b border-white/5 bg-background/70 backdrop-blur-xl">
-        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6 lg:px-8">
+    <div className="min-h-screen bg-background text-foreground">
+      <header className="sticky top-0 z-50 border-b border-border bg-background/90 backdrop-blur">
+        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
           <KoalaLogo />
-          <nav className="hidden items-center gap-8 md:flex">
+          <nav className="hidden items-center gap-7 md:flex">
             {navLinks.map((link) => (
               <a
                 key={link.label}
                 href={link.href}
-                className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+                className="text-sm text-muted-foreground transition-colors hover:text-foreground"
               >
                 {link.label}
               </a>
             ))}
           </nav>
-          <div className="flex items-center gap-3">
-            <Button variant="ghost" size="sm" render={<a href="#download" />} className="hidden sm:inline-flex">
-              Sign in
-            </Button>
-            <Button size="sm" render={<a href="/koala-setup.exe" download />}>
+          <div className="flex items-center gap-2">
+            <Button
+              size="sm"
+              render={<a href={RELEASE_URL} target="_blank" rel="noopener noreferrer" />}
+              nativeButton={false}
+            >
+              <Download />
               Download
             </Button>
           </div>
         </div>
       </header>
 
-      <main className="relative z-10">
-        <section className="relative pt-24 pb-32 lg:pt-32 lg:pb-40">
-          <div className="mx-auto max-w-7xl px-6 lg:px-8">
-            <AnimatedContent threshold={0.2}>
-              <div className="mx-auto max-w-4xl text-center">
-                <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-4 py-1.5 text-xs font-medium text-primary">
-                  <Lock className="size-3.5" />
-                  <span>Desktop application · Windows · Air-gapped</span>
+      <main>
+        {/* Hero */}
+        <section className="border-b border-border py-20 lg:py-28">
+          <div className="mx-auto max-w-6xl px-6">
+            <Reveal>
+              <div className="mx-auto max-w-3xl text-center">
+                <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-border px-3 py-1 font-mono text-xs text-muted-foreground">
+                  <span className="size-1.5 rounded-full bg-primary" />
+                  Built for SIH 2026 · Sovereign On-Premise Agentic AI Workbench
                 </div>
-                <h1 className="font-heading text-5xl leading-tight font-extrabold tracking-tight sm:text-6xl lg:text-7xl">
-                  Agentic AI that never
-                  <br />
-                  <span className="bg-gradient-to-r from-primary to-teal-300 bg-clip-text text-transparent">
-                    leaves the building
-                  </span>
+                <h1 className="font-heading text-4xl leading-[1.1] font-bold tracking-tight sm:text-5xl lg:text-6xl">
+                  Agentic AI that never leaves{" "}
+                  <span className="text-primary">the building</span>
                 </h1>
                 <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-muted-foreground">
-                  Koala is a self-hosted, on-premise AI workbench for refineries, PSUs, defence
-                  manufacturing and government offices. Run open-weight multimodal LLMs on your own
-                  GPU server — no cloud, no leaks, no external calls.
+                  Koala is a self-hosted AI workbench for refineries, PSUs, defence
+                  manufacturing and government offices. It runs open-weight multimodal
+                  LLMs entirely on your own GPU server — no cloud, no external calls.
                 </p>
-                <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
-                  <Magnet padding={60} magnetStrength={2.5}>
-                    <Button size="lg" render={<a href="/koala-setup.exe" download />} className="h-12 px-6 text-base">
-                      <Download className="mr-2 size-5" />
-                      Download for Windows (.exe)
-                    </Button>
-                  </Magnet>
-                  <Button variant="outline" size="lg" render={<a href="#how-it-works" />} className="h-12 px-6 text-base">
+                <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
+                  <Button
+                    size="lg"
+                    render={<a href={RELEASE_URL} target="_blank" rel="noopener noreferrer" />}
+                    nativeButton={false}
+                    className="h-11 px-6 text-base"
+                  >
+                    <Download className="mr-1 size-5" />
+                    Download for Windows (.exe)
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="lg"
+                    render={<a href="#agent" />}
+                    nativeButton={false}
+                    className="h-11 px-6 text-base"
+                  >
                     See how it works
-                    <ArrowRight className="ml-2 size-4" />
+                    <ArrowRight className="ml-1 size-4" />
                   </Button>
                 </div>
-                <p className="mt-4 text-xs text-muted-foreground">
-                  Version 0.8.0 · Windows 10/11 · 64-bit ·{" "}
-                  <span className="text-primary">No installer telemetry</span>
+                <p className="mt-4 font-mono text-xs text-muted-foreground">
+                  v1.18.31-koala.1 · Windows 10/11 64-bit · runs fully offline
                 </p>
               </div>
-            </AnimatedContent>
+            </Reveal>
 
-            <AnimatedContent className="mt-16 lg:mt-20" threshold={0.1} delay={0.1}>
-              <div className="mx-auto aspect-[16/9] w-full max-w-5xl overflow-hidden rounded-3xl border border-white/10 bg-card shadow-2xl">
-                <PlaceGraphic variant="hero" />
-              </div>
-            </AnimatedContent>
+            <Reveal className="mt-16" delay={0.1}>
+              <Frame
+                src={fullWorking}
+                alt="Koala agent chat completing a task: reading a project and generating a PPTX and DOCX deliverable"
+                className="mx-auto max-w-3xl"
+              />
+            </Reveal>
           </div>
         </section>
 
-        <section className="border-y border-white/5 bg-background/50 py-10 backdrop-blur-sm">
-          <div className="mx-auto max-w-7xl px-6 lg:px-8">
-            <AnimatedContent threshold={0.3}>
-              <p className="text-center text-sm font-medium text-muted-foreground">
-                Built for organizations that cannot send data outside
-              </p>
-            </AnimatedContent>
-            <AnimatedContent threshold={0.3} delay={0.05}>
-              <div className="mt-6 flex flex-wrap items-center justify-center gap-x-10 gap-y-4">
-                {trustLogos.map((logo) => (
-                  <div
-                    key={logo.abbr}
-                    className="flex h-10 items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-3 text-sm font-semibold text-muted-foreground"
-                  >
-                    <Globe className="size-4 text-primary" />
-                    <span>{logo.abbr}</span>
-                  </div>
-                ))}
-              </div>
-            </AnimatedContent>
-          </div>
-        </section>
-
-        <section id="features" className="py-24 lg:py-32">
-          <div className="mx-auto max-w-7xl px-6 lg:px-8">
-            <AnimatedContent threshold={0.2}>
-              <div className="mx-auto max-w-3xl text-center">
-                <h2 className="font-heading text-3xl font-bold tracking-tight sm:text-4xl">
-                  One workbench, every capability you need
-                </h2>
-                <p className="mt-4 text-muted-foreground">
-                  Koala bundles model routing, agentic execution, multimodal vision and knowledge
-                  grounding into a single desktop experience.
-                </p>
-              </div>
-            </AnimatedContent>
-
-            <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {featureCards.map((card, i) => (
-                <AnimatedContent key={card.title} threshold={0.2} delay={i * 0.05}>
-                  <GlareHover
-                    width="100%"
-                    height="100%"
-                    background="transparent"
-                    borderColor="rgba(255,255,255,0.08)"
-                    borderRadius="1.25rem"
-                    glareColor="#2dd4bf"
-                    glareOpacity={0.18}
-                    glareSize={180}
-                    className="h-full min-h-[240px] bg-card/60 p-6 text-left backdrop-blur-sm transition-colors hover:border-primary/30 hover:bg-card"
-                  >
-                    <div className="relative z-10 flex h-full flex-col">
-                      <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                        <card.icon className="size-5.5" />
-                      </div>
-                      <h3 className="font-heading text-lg font-semibold">{card.title}</h3>
-                      <p className="mt-2 flex-1 text-sm leading-relaxed text-muted-foreground">
-                        {card.description}
-                      </p>
-                    </div>
-                  </GlareHover>
-                </AnimatedContent>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section id="how-it-works" className="relative py-24 lg:py-32">
-          <div className="absolute inset-0 -z-10 bg-gradient-to-b from-transparent via-primary/5 to-transparent" />
-          <div className="mx-auto max-w-7xl px-6 lg:px-8">
-            <AnimatedContent threshold={0.2}>
-              <div className="mx-auto max-w-3xl text-center">
-                <h2 className="font-heading text-3xl font-bold tracking-tight sm:text-4xl">
-                  From prompt to deliverable in four steps
-                </h2>
-                <p className="mt-4 text-muted-foreground">
-                  Koala plans the work, selects models, runs tools and produces files — entirely
-                  inside your network.
-                </p>
-              </div>
-            </AnimatedContent>
-
-            <div className="mt-16 grid gap-8 md:grid-cols-2 lg:grid-cols-4">
-              {steps.map((step, i) => (
-                <AnimatedContent key={step.label} threshold={0.2} delay={i * 0.08}>
-                  <div className="group relative rounded-2xl border border-white/10 bg-card/60 p-6 backdrop-blur-sm transition-colors hover:border-primary/30 hover:bg-card">
-                    <span className="font-heading text-4xl font-bold text-white/10">{step.label}</span>
-                    <div className="mt-4 flex h-14 w-14 items-center justify-center rounded-xl bg-primary/10">
-                      {step.visual}
-                    </div>
-                    <h3 className="mt-5 font-heading text-lg font-semibold">{step.title}</h3>
-                    <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                      {step.description}
-                    </p>
-                  </div>
-                </AnimatedContent>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section id="models" className="py-24 lg:py-32">
-          <div className="mx-auto max-w-7xl px-6 lg:px-8">
-            <AnimatedContent threshold={0.2}>
-              <div className="mx-auto max-w-3xl text-center">
-                <h2 className="font-heading text-3xl font-bold tracking-tight sm:text-4xl">
-                  The right model for every task type
-                </h2>
-                <p className="mt-4 text-muted-foreground">
-                  New open-weight models can be plugged in without redesigning the system. Koala
-                  routes requests based on capability, context and latency.
-                </p>
-              </div>
-            </AnimatedContent>
-
-            <div className="mt-16 grid gap-6 lg:grid-cols-3">
-              {taskCards.map((task, i) => (
-                <AnimatedContent key={task.title} threshold={0.15} delay={i * 0.08}>
-                  <div className="overflow-hidden rounded-3xl border border-white/10 bg-card shadow-xl">
-                    <div className="aspect-[4/3] w-full">
-                      <PlaceGraphic variant={task.image} />
-                    </div>
-                    <div className="p-6">
-                      <div className="flex flex-wrap gap-2">
-                        {task.chips.map((chip) => (
-                          <span
-                            key={chip}
-                            className="rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-xs font-medium text-muted-foreground"
-                          >
-                            {chip}
-                          </span>
-                        ))}
-                      </div>
-                      <h3 className="mt-4 font-heading text-xl font-semibold">{task.title}</h3>
-                      <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                        {task.description}
-                      </p>
-                    </div>
-                  </div>
-                </AnimatedContent>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section id="download" className="py-24 lg:py-32">
-          <div className="mx-auto max-w-5xl px-6 lg:px-8">
-            <AnimatedContent threshold={0.15}>
-              <div className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-card p-10 text-center shadow-2xl lg:p-16">
-                <div className="absolute inset-0 -z-10 bg-gradient-to-br from-primary/10 to-transparent" />
-                <div className="mx-auto flex max-w-2xl flex-col items-center">
-                  <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-lg shadow-primary/20">
-                    <Download className="size-8" />
-                  </div>
-                  <h2 className="font-heading text-3xl font-bold tracking-tight sm:text-4xl">
-                    Download Koala for Windows
+        {/* Agentic execution */}
+        <section id="agent" className="border-b border-border py-20 lg:py-28">
+          <div className="mx-auto max-w-6xl px-6">
+            <div className="grid items-center gap-12 lg:grid-cols-2">
+              <Reveal>
+                <div className="order-2 lg:order-1">
+                  <span className="font-mono text-xs text-primary">Agentic execution</span>
+                  <h2 className="mt-3 font-heading text-3xl font-bold tracking-tight sm:text-4xl">
+                    Plans, calls tools, and iterates until the job is done
                   </h2>
-                  <p className="mt-4 text-muted-foreground">
-                    A single installer. No cloud accounts, no telemetry, no trial gates. Get the
-                    sovereign desktop workbench running on your premises today.
+                  <p className="mt-4 leading-relaxed text-muted-foreground">
+                    Koala doesn&apos;t just answer once and stop. Give it a task and it reads
+                    the relevant files, decides which tools to call, and works through
+                    multiple steps — visibly, in the same window.
                   </p>
-                  <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row">
-                    <Magnet padding={70} magnetStrength={2.5}>
-                      <Button size="lg" render={<a href="/koala-setup.exe" download />} className="h-12 px-8 text-base">
-                        <Download className="mr-2 size-5" />
-                        Download koala-setup.exe
-                      </Button>
-                    </Magnet>
-                    <Button variant="outline" size="lg" className="h-12 px-8 text-base">
-                      Read the deployment guide
-                    </Button>
-                  </div>
-                  <ul className="mt-8 flex flex-wrap justify-center gap-x-6 gap-y-2 text-xs text-muted-foreground">
-                    <li className="flex items-center gap-1.5">
-                      <CheckCircle2 className="size-3.5 text-primary" />
-                      Windows 10/11 64-bit
+                  <ul className="mt-6 space-y-3 text-sm">
+                    <li className="flex items-start gap-2">
+                      <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-primary" />
+                      <span>Reads project files before making changes</span>
                     </li>
-                    <li className="flex items-center gap-1.5">
-                      <CheckCircle2 className="size-3.5 text-primary" />
-                      Requires CUDA-capable GPU
+                    <li className="flex items-start gap-2">
+                      <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-primary" />
+                      <span>
+                        Calls local tools — <code className="font-mono text-xs">pptx_create</code>,{" "}
+                        <code className="font-mono text-xs">docx_create</code>, code execution — in sequence
+                      </span>
                     </li>
-                    <li className="flex items-center gap-1.5">
-                      <CheckCircle2 className="size-3.5 text-primary" />
-                      Offline-first installer
+                    <li className="flex items-start gap-2">
+                      <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-primary" />
+                      <span>Ends with real files, not just a chat reply</span>
                     </li>
                   </ul>
                 </div>
+              </Reveal>
+              <Reveal delay={0.1} className="order-1 lg:order-2">
+                <Frame
+                  src={toolCalling}
+                  alt="Koala agent mid-task, calling pptx_create and docx_create tools while thinking through a project overview"
+                />
+              </Reveal>
+            </div>
+          </div>
+        </section>
+
+        {/* Models */}
+        <section id="models" className="border-b border-border py-20 lg:py-28">
+          <div className="mx-auto max-w-6xl px-6">
+            <Reveal>
+              <div className="mx-auto max-w-2xl text-center">
+                <span className="font-mono text-xs text-primary">Multi-model routing</span>
+                <h2 className="mt-3 font-heading text-3xl font-bold tracking-tight sm:text-4xl">
+                  Not locked to one model
+                </h2>
+                <p className="mt-4 text-muted-foreground">
+                  Connect any OpenAI-compatible endpoint, tell Koala what it&apos;s good at, and
+                  it gets added to the routing pool — no redesign needed as new open-weight
+                  models ship.
+                </p>
               </div>
-            </AnimatedContent>
+            </Reveal>
+
+            <div className="mt-14 grid gap-6 sm:grid-cols-3">
+              {modelSteps.map((step, i) => (
+                <Reveal key={step.title} delay={i * 0.08}>
+                  <div>
+                    <Frame src={step.image} alt={step.alt} />
+                    <h3 className="mt-4 font-heading text-base font-semibold">{step.title}</h3>
+                    <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
+                      {step.description}
+                    </p>
+                  </div>
+                </Reveal>
+              ))}
+            </div>
+
+            <Reveal className="mt-14">
+              <div className="grid items-center gap-10 lg:grid-cols-2">
+                <div>
+                  <h3 className="font-heading text-xl font-semibold">
+                    One place to manage every connected model
+                  </h3>
+                  <p className="mt-3 leading-relaxed text-muted-foreground">
+                    Every model you connect — local or private — shows up here. Toggle
+                    which ones are exposed to the workbench without touching config files.
+                  </p>
+                </div>
+                <Frame
+                  src={manageModel}
+                  alt="Manage models screen listing connected models such as Mistral 7B Instruct and Gemma with on/off toggles"
+                  className="max-w-md lg:ml-auto"
+                />
+              </div>
+            </Reveal>
+          </div>
+        </section>
+
+        {/* Security / audit */}
+        <section id="security" className="border-b border-border py-20 lg:py-28">
+          <div className="mx-auto max-w-6xl px-6">
+            <div className="grid items-center gap-12 lg:grid-cols-2">
+              <Reveal>
+                <Frame
+                  src={auditLog}
+                  alt="Audit log network monitor showing every outbound request as allowed, with provider, policy rule, status and duration"
+                />
+              </Reveal>
+              <Reveal delay={0.1}>
+                <span className="font-mono text-xs text-primary">Sovereignty, provable</span>
+                <h2 className="mt-3 font-heading text-3xl font-bold tracking-tight sm:text-4xl">
+                  Nothing leaves this machine
+                </h2>
+                <p className="mt-4 leading-relaxed text-muted-foreground">
+                  A claim of &quot;air-gapped&quot; isn&apos;t enough — this is the proof. Every
+                  provider request is logged with its endpoint, policy rule, status and
+                  duration. The network monitor runs live, so you can watch traffic instead
+                  of taking sovereignty on faith.
+                </p>
+                <ul className="mt-6 space-y-3 text-sm">
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-primary" />
+                    <span>Live view of every allowed and denied call</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-primary" />
+                    <span>Durable, redacted records of tool activity</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-primary" />
+                    <span>Separate tabs for network monitor and tool activity audit</span>
+                  </li>
+                </ul>
+              </Reveal>
+            </div>
+          </div>
+        </section>
+
+        {/* Feature grid */}
+        <section id="features" className="border-b border-border py-20 lg:py-28">
+          <div className="mx-auto max-w-6xl px-6">
+            <Reveal>
+              <div className="mx-auto max-w-2xl text-center">
+                <h2 className="font-heading text-3xl font-bold tracking-tight sm:text-4xl">
+                  Everything the problem statement asked for
+                </h2>
+              </div>
+            </Reveal>
+            <div className="mt-14 grid gap-x-8 gap-y-10 sm:grid-cols-2">
+              {featureGrid.map((f, i) => (
+                <Reveal key={f.title} delay={(i % 4) * 0.05}>
+                  <div className="flex gap-4">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-border text-primary">
+                      <f.icon className="size-4.5" />
+                    </div>
+                    <div>
+                      <h3 className="font-heading text-base font-semibold">{f.title}</h3>
+                      <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+                        {f.description}
+                      </p>
+                    </div>
+                  </div>
+                </Reveal>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* FAQ */}
+        <section id="faq" className="border-b border-border py-20 lg:py-28">
+          <div className="mx-auto max-w-3xl px-6">
+            <Reveal>
+              <h2 className="text-center font-heading text-3xl font-bold tracking-tight sm:text-4xl">
+                Frequently asked
+              </h2>
+            </Reveal>
+            <div className="mt-12 divide-y divide-border border-t border-border">
+              {faqItems.map((item, i) => (
+                <Reveal key={item.q} delay={(i % 4) * 0.04}>
+                  <details className="group py-5">
+                    <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-medium">
+                      {item.q}
+                      <ChevronDown className="size-4 shrink-0 text-muted-foreground transition-transform group-open:rotate-180" />
+                    </summary>
+                    <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                      {item.a}
+                    </p>
+                  </details>
+                </Reveal>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Download CTA */}
+        <section id="download" className="py-20 lg:py-28">
+          <div className="mx-auto max-w-3xl px-6 text-center">
+            <Reveal>
+              <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-xl bg-primary text-primary-foreground">
+                <Download className="size-6" />
+              </div>
+              <h2 className="mt-6 font-heading text-3xl font-bold tracking-tight sm:text-4xl">
+                Download Koala for Windows
+              </h2>
+              <p className="mt-4 text-muted-foreground">
+                Grab the latest release and run it on your own workstation or GPU server.
+              </p>
+              <div className="mt-8 flex justify-center">
+                <Button
+                  size="lg"
+                  render={<a href={RELEASE_URL} target="_blank" rel="noopener noreferrer" />}
+                  nativeButton={false}
+                  className="h-11 px-8 text-base"
+                >
+                  <Download className="mr-1 size-5" />
+                  Download koala-setup.exe
+                </Button>
+              </div>
+              <ul className="mt-8 flex flex-wrap justify-center gap-x-6 gap-y-2 text-xs text-muted-foreground">
+                <li className="flex items-center gap-1.5">
+                  <CheckCircle2 className="size-3.5 text-primary" />
+                  Windows 10/11 64-bit
+                </li>
+                <li className="flex items-center gap-1.5">
+                  <CheckCircle2 className="size-3.5 text-primary" />
+                  GPU recommended
+                </li>
+                <li className="flex items-center gap-1.5">
+                  <CheckCircle2 className="size-3.5 text-primary" />
+                  Runs fully offline
+                </li>
+              </ul>
+            </Reveal>
           </div>
         </section>
       </main>
 
-      <footer className="relative z-10 border-t border-white/10 bg-background/80 py-12 backdrop-blur-sm">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <div className="flex flex-col items-start justify-between gap-8 md:flex-row">
-            <div>
-              <KoalaLogo />
-              <p className="mt-3 max-w-sm text-sm text-muted-foreground">
-                Sovereign, on-premise agentic AI for confidential industrial work.
-              </p>
-            </div>
-            <div className="grid grid-cols-2 gap-10 sm:grid-cols-3">
-              <div>
-                <h4 className="font-heading text-sm font-semibold">Product</h4>
-                <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
-                  <li><a href="#features" className="hover:text-foreground">Features</a></li>
-                  <li><a href="#models" className="hover:text-foreground">Models</a></li>
-                  <li><a href="#download" className="hover:text-foreground">Download</a></li>
-                </ul>
-              </div>
-              <div>
-                <h4 className="font-heading text-sm font-semibold">Resources</h4>
-                <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
-                  <li><a href="#" className="hover:text-foreground">Documentation</a></li>
-                  <li><a href="#" className="hover:text-foreground">Deployment guide</a></li>
-                  <li><a href="#" className="hover:text-foreground">Security whitepaper</a></li>
-                </ul>
-              </div>
-              <div>
-                <h4 className="font-heading text-sm font-semibold">Legal</h4>
-                <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
-                  <li><a href="#" className="hover:text-foreground">Privacy</a></li>
-                  <li><a href="#" className="hover:text-foreground">Terms</a></li>
-                </ul>
-              </div>
-            </div>
-          </div>
-          <div className="mt-10 flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-6 text-xs text-muted-foreground sm:flex-row">
-            <p>&copy; {new Date().getFullYear()} Koala. Built for sovereign AI.</p>
-            <div className="flex items-center gap-2">
-              <Server className="size-4 text-primary" />
-              <span>All processing stays on your server.</span>
-            </div>
-          </div>
+      <footer className="border-t border-border py-10">
+        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-6 text-sm text-muted-foreground sm:flex-row">
+          <KoalaLogo />
+          <p>Sovereign, on-premise agentic AI for confidential industrial work.</p>
         </div>
       </footer>
     </div>
