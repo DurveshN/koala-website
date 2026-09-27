@@ -26,8 +26,8 @@ import addModel2 from "../../public/prototype_image/add_model_2.png";
 import addModel3 from "../../public/prototype_image/add_model_3.png";
 import manageModel from "../../public/prototype_image/manage_model.png";
 
-const RELEASE_URL =
-  "https://github.com/DurveshN/koala/releases/tag/v1.18.31-koala.1";
+const DOWNLOAD_URL =
+  "https://github.com/DurveshN/koala/releases/download/v1.18.31-koala.1/koala-desktop-win-x64.exe";
 
 const navLinks = [
   { label: "Features", href: "#features" },
@@ -207,7 +207,7 @@ export default function Home() {
           <div className="flex items-center gap-2">
             <Button
               size="sm"
-              render={<a href={RELEASE_URL} target="_blank" rel="noopener noreferrer" />}
+              render={<a href={DOWNLOAD_URL} download="koala-desktop-win-x64.exe" />}
               nativeButton={false}
             >
               <Download />
@@ -239,7 +239,7 @@ export default function Home() {
                 <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
                   <Button
                     size="lg"
-                    render={<a href={RELEASE_URL} target="_blank" rel="noopener noreferrer" />}
+                    render={<a href={DOWNLOAD_URL} download="koala-desktop-win-x64.exe" />}
                     nativeButton={false}
                     className="h-11 px-6 text-base"
                   >
@@ -481,7 +481,7 @@ export default function Home() {
               <div className="mt-8 flex justify-center">
                 <Button
                   size="lg"
-                  render={<a href={RELEASE_URL} target="_blank" rel="noopener noreferrer" />}
+                  render={<a href={DOWNLOAD_URL} download="koala-desktop-win-x64.exe" />}
                   nativeButton={false}
                   className="h-11 px-8 text-base"
                 >
