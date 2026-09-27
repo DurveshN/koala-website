@@ -161,9 +161,8 @@ function Reveal({
 function KoalaLogo() {
   return (
     <div className="flex items-center gap-2">
-      <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-        <span className="font-heading text-base font-bold">K</span>
-      </div>
+      {/* eslint-disable-next-line @next/next/no-img-element -- .ico isn't a supported next/image output format */}
+      <img src="/icon.ico" alt="" className="h-8 w-8 rounded-lg" />
       <span className="font-heading text-lg font-semibold tracking-tight">koala</span>
     </div>
   );
